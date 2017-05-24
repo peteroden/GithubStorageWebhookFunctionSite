@@ -15,7 +15,7 @@
         },
         "lib": {
             "matchCondition": {
-                "route": "/lib/{{*restOfPath}}"
+                "route": "/lib/{*restOfPath}"
             },
             "backendUri": "https://%AZURE_STORAGE_ACCOUNT%.blob.core.windows.net/lib/{*restOfPath}"
         }
