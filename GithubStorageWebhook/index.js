@@ -2,8 +2,8 @@ var request = require('request');
 var azure = require('azure-storage');
 var unzip = require('unzip');
 
-var blobContainer = 'static-website';
-var githubrepo = 'peteroden/peterodenwebsite';
+var blobContainer = process.env.STATIC_CONTENT_CONTAINER;
+var githubrepo = process.env.STATIC_CONTENT_USER+'/'+process.env.STATIC_CONTENT_REPO;
 
 module.exports = function (context, data) {
     context.log('GitHub Storage WebHook triggered!'); //var data = ', data);
