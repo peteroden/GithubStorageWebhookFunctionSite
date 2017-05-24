@@ -1,0 +1,16 @@
+{
+  "name": "GithubStorageWebhook",
+  "version": "0.1.0",
+  "description": "Keep an Azure Storage container in sync with a Github repo",
+  "author": "Pete Roden",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/peteroden/GithubStorageWebhook"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "azure-storage": "^2.1.0",
+    "request": "^2.81.0",
+    "unzip": "^0.1.11"
+  }
+}
