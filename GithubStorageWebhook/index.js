@@ -61,7 +61,7 @@ module.exports = function (context, data) {
                 });
               },
               function (modifiedCallback) {
-                eachLimit(commit.added, asyncThreadLimit, function (fileName, callback) {
+                eachLimit(commit.modified, asyncThreadLimit, function (fileName, callback) {
                   context.log('modify file https://github.com/' + githubrepo + '/raw/master/' + fileName, 'in azure storage account');
                   writeblobfile(fileName, blobService, context, callback);
                 }, function () {
