@@ -11,10 +11,8 @@
 * AZURE_STORAGE_ACCOUNT
 * AZURE_STORAGE_ACCESS_KEY
 * STATIC_CONTENT_CONTAINER
-* STATIC_CONTENT_USER
+* STATIC_CONTENT_OWNER
 * STATIC_CONTENT_REPO
-* FUNCTION_GITHUB_USER
-* FUNCTION_GITHUB_REPO
 
 ### Static content requirements:
 * You must have an index.html that will serve as the root page

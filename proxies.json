@@ -5,19 +5,19 @@
             "matchCondition": {
                 "route": "/"
             },
-            "backendUri": "https://%AZURE_STORAGE_ACCOUNT%.blob.core.windows.net/index.html"
+            "backendUri": "https://%AZURE_STORAGE_ACCOUNT%.blob.core.windows.net/%STATIC_CONTENT_CONTAINER%/index.html"
         },
         "index": {
             "matchCondition": {
                 "route": "/index.html"
             },
-            "backendUri": "https://%AZURE_STORAGE_ACCOUNT%.blob.core.windows.net/index.html"
+            "backendUri": "https://%AZURE_STORAGE_ACCOUNT%.blob.core.windows.net/%STATIC_CONTENT_CONTAINER%/index.html"
         },
         "lib": {
             "matchCondition": {
                 "route": "/lib/{*restOfPath}"
             },
-            "backendUri": "https://%AZURE_STORAGE_ACCOUNT%.blob.core.windows.net/lib/{*restOfPath}"
+            "backendUri": "https://%AZURE_STORAGE_ACCOUNT%.blob.core.windows.net/%STATIC_CONTENT_CONTAINER%/lib/{*restOfPath}"
         }
     }
 }
