@@ -28,7 +28,7 @@ module.exports = function (context, data) {
         request(options, function (error, repoListResponse, body) {
           context.log('error:', error); // Print the error if one occurred
           var data = JSON.parse(body);
-          context.log(data);
+
           eachLimit(data.tree, asyncThreadLimit, function (item, callback) {
             if (item.type == 'blob') {
               context.log('add file https://github.com/' + githubrepo + '/raw/master/' + item.path, 'to azure storage account');
@@ -41,52 +41,45 @@ module.exports = function (context, data) {
           });
         });
       } else {
-        // container already existed so this is github triggered update
+        // container already existed so this is a github commit triggered update
         eachLimit(data.commits, asyncThreadLimit, function (commit, commitCallback) {
-          parallel([
-              function (addedCallback) {
-                eachLimit(commit.added, asyncThreadLimit, function (fileName, callback) {
-                  context.log('add file https://github.com/' + githubrepo + '/raw/master/' + fileName, 'to azure storage account');
-                  writeblobfile(fileName, blobService, context, callback);
-                }, function () {
-                  addedCallback();
-                });
-              },
-              function (removedCallback) {
-                eachLimit(commit.added, asyncThreadLimit, function (fileName, callback) {
-                  context.log('remove file ', fileName, 'from azure storage account');
-                  removeblobfile(fileName, blobService, context, callback);
-                }, function () {
-                  removedCallback();
-                });
-              },
-              function (modifiedCallback) {
-                eachLimit(commit.modified, asyncThreadLimit, function (fileName, callback) {
-                  context.log('modify file https://github.com/' + githubrepo + '/raw/master/' + fileName, 'in azure storage account');
-                  writeblobfile(fileName, blobService, context, callback);
-                }, function () {
-                  modifiedCallback();
-                });
-              },
-            ],
-            function (err, results) {
+          const options = {
+            url: 'https://api.github.com/repos/'+githubrepo+'/commits/'+commit.id,
+            headers: {'User-Agent': 'GitHubStorageWebhookFunctionSite'}
+          };
+
+          request(options, function (error, repoListResponse, body) {
+            context.log(error); // Print the error if one occurred
+            var commits = JSON.parse(body);
+            //context.log(data);
+            eachLimit(commits.files, asyncThreadLimit, function (item, callback) {
+              if (item.status == 'modified' || item.status == 'added') {
+                context.log('write file ', item.filename,'from', item.raw_url, 'to azure storage account');
+                writeblobfile(item.filename, item.raw_url, blobService, context, callback);
+              } else if (item.status == 'removed') {
+                context.log('remove file ', item.filename, 'from azure storage account');
+                removeblobfile(item.filename, blobService, context, callback);
+              } else {
+                callback();
+              }
+            }, function () {
               commitCallback();
             });
+          });
         }, function () {
           context.done();
         });
       }
-
     } else {
-      context.log(error);
+      context.log('Error creating storage container '+error);
       context.done();
     }
   });
 };
 
-function writeblobfile(fileName, blobService, context, callback) {
+function writeblobfile(fileName, url, blobService, context, callback) {
   request
-    .get('https://github.com/' + githubrepo + '/raw/master/' + fileName)
+    .get({ url: url, headers: {'User-Agent': 'GitHubStorageWebhookFunctionSite'} })
     .on('error', function (err) {
       context.log(err);
     })
