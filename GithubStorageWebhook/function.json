@@ -1,16 +1,27 @@
 {
-  "bindings": [
-    {
-      "type": "httpTrigger",
-      "direction": "in",
-      "webHookType": "github",
-      "name": "req"
-    },
-    {
-      "type": "http",
-      "direction": "out",
-      "name": "res"
-    }
-  ],
-  "disabled": false
+ "bindings": [
+  {
+   "type": "httpTrigger",
+   "direction": "in",
+   "webHookType": "github",
+   "name": "req"
+  },
+  {
+   "type": "http",
+   "direction": "out",
+   "name": "res"
+  },
+  {
+   "type": "queue",
+   "name": "actionQueue",
+   "queueName": "actionqueue",
+   "connection": "ACTION_QUEUE_CONNECTION",
+   "direction": "out"
+  }
+ ],
+ "disabled": false,
+ "_originalEntryPoint": false,
+ "_originalScriptFile": "index.js",
+ "scriptFile": "../.funcpack/index.js",
+ "entryPoint": "GithubStorageWebhook"
 }

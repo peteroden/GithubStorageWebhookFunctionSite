@@ -1,0 +1,16 @@
+{
+ "disabled": false,
+ "bindings": [
+  {
+   "name": "actionQueueItem",
+   "type": "queueTrigger",
+   "direction": "in",
+   "queueName": "actionQueue",
+   "connection": "ACTION_QUEUE_CONNECTION"
+  }
+ ],
+ "_originalEntryPoint": false,
+ "_originalScriptFile": "index.js",
+ "scriptFile": "../.funcpack/index.js",
+ "entryPoint": "ProcessQueuedActions"
+}
