@@ -24,29 +24,29 @@ module.exports = function (context, data) {
           headers: {'User-Agent': 'GitHubStorageWebhookFunctionSite'}
         };
 
-        request(options, function (error, repoListResponse, body) {
+        request(options, (error, repoListResponse, body) => {
           context.log('error:', error); // Print the error if one occurred
           var data = JSON.parse(body);
 
           var actionList = data.tree
-            .filter(function(item) {return item.type == 'blob'})
-            .map( function(item){ return `{"action":"added", "path":${item.path},"source":$(item.url)}` });
+            .filter( (item) => {return item.type == 'blob'})
+            .map( (item) => {return `{"action":"added", "path":${item.path},"source":${item.url}` });
           context.bindings.actionQueue = actionList;
           context.done();
         });
       } else {
         // container already existed so this is a github commit triggered update
-        data.commits.forEach( function (commit) {
+        data.commits.forEach( (commit) => {
           var options = {
             url: 'https://api.github.com/repos/'+githubrepo+'/commits/'+commit.id,
             headers: {'User-Agent': 'GitHubStorageWebhookFunctionSite'}
           };
-          request(options, function (error, repoListResponse, body) {
+          request(options, (error, repoListResponse, body) => {
             context.log(error); // Print the error if one occurred
             var data = JSON.parse(body);
             var actionList = data.tree
-              .filter(function(item) {return item.type == 'blob'})
-              .map( function(item){ return `{"action":item.status, "path":item.filename, ${item.status != "removed"? "source":item.raw_url}}` });
+              .filter( (item) => {return item.type == 'blob'})
+              .map( (item) => {return `{"action":${item.status}, "path":${item.filename}, ${item.status != "removed"? "source":item.raw_url}}` });
             context.bindings.actionQueue = actionList;
             context.done();
           })
